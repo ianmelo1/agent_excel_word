@@ -7,6 +7,7 @@ from openpyxl.styles import Font, Alignment, PatternFill
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from rate_limiter import rate_limit
 import google.generativeai as genai
 
 
@@ -15,7 +16,7 @@ class AgenteOfficeIA:
     Agente automático que integra Excel, Word e IA (Gemini)
     """
 
-    def __init__(self, api_key=None, modelo="gemini-2.0-flash-exp"):
+    def __init__(self, api_key=None, modelo="gemini-2.0-flash"):
         """
         Inicializa o agente com a chave da API do Google Gemini
 
@@ -171,6 +172,7 @@ class AgenteOfficeIA:
 
     # ============ FUNÇÕES IA ============
 
+    @rate_limit(max_per_minute=10)
     def perguntar_ia(self, pergunta, contexto=None):
         """
         Faz uma pergunta para a IA Gemini
